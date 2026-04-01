@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AVI to F5 BIG-IP Migration — Approach Comparison &amp; Decision Framework</title>
+<style>
+  :root {
+    --navy: #1E2B3A;
+    --navy-light: #2A3F54;
+    --teal: #1A8CA8;
+    --teal-light: #E0F4F7;
+    --amber: #E8A020;
+    --amber-light: #FEF3CD;
+    --blue: #1E5FA8;
+    --blue-light: #E8F0FA;
+    --green: #1D8A4E;
+    --red: #C0392B;
+    --gray-bg: #F4F7FA;
+    --gray-text: #374151;
+    --gray-muted: #6B7280;
+    --gray-border: #E8EEF4;
+    --white: #FFFFFF;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Segoe UI', Calibri, -apple-system, BlinkMacSystemFont, sans-serif;
+    color: var(--gray-text);
+    background: var(--white);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── Hero ── */
+  .hero {
+    background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%);
+    color: var(--white);
+    padding: 48px 60px 60px;
+  }
+  .hero .logo-bar {
+    margin-bottom: 32px;
+  }
+  .hero .logo-bar img {
+    height: 52px;
+  }
+  .hero h1 {
+    font-size: 42px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    margin-bottom: 8px;
+  }
+  .hero .subtitle {
+    font-size: 22px;
+    font-weight: 400;
+    opacity: 0.85;
+    margin-bottom: 24px;
+  }
+  .hero .org-line {
+    font-size: 15px;
+    opacity: 0.6;
+    margin-bottom: 28px;
+  }
+  .hero .deadline-badge {
+    display: inline-block;
+    background: var(--teal);
+    color: var(--white);
+    padding: 14px 28px;
+    border-radius: 6px;
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+  }
+  .hero .deadline-badge span { margin-right: 8px; }
+
+  /* ── Sections ── */
+  section {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 56px 40px;
+  }
+  section + section { padding-top: 0; }
+
+  h2 {
+    font-size: 32px;
+    font-weight: 800;
+    color: var(--navy);
+    margin-bottom: 28px;
+    letter-spacing: -0.3px;
+  }
+  h3 {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 12px;
+  }
+
+  /* ── Situation cards ── */
+  .situation-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+  .situation-card.full-width {
+    grid-column: 1 / -1;
+  }
+  .situation-card {
+    display: flex;
+    align-items: stretch;
+    background: var(--white);
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid var(--gray-border);
+  }
+  .situation-card .accent {
+    width: 5px;
+    flex-shrink: 0;
+    background: var(--teal);
+  }
+  .situation-card .content {
+    padding: 20px 24px;
+    flex: 1;
+  }
+  .situation-card .content h3 {
+    color: var(--navy);
+    font-size: 17px;
+    margin-bottom: 6px;
+  }
+  .situation-card .content p {
+    font-size: 14px;
+    color: var(--gray-muted);
+  }
+  .situation-card .stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 16px 24px;
+    background: var(--navy);
+    color: var(--white);
+    width: 160px;
+    flex-shrink: 0;
+    text-align: center;
+  }
+  .situation-card .stat .num {
+    font-size: 32px;
+    font-weight: 800;
+    line-height: 1.1;
+    color: var(--teal);
+  }
+  .situation-card .stat .label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    opacity: 0.7;
+    margin-top: 4px;
+  }
+
+  /* ── Three approaches overview ── */
+  .approaches-overview {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    margin-bottom: 16px;
+  }
+  .approach-card {
+    background: var(--white);
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid var(--gray-border);
+  }
+  .approach-card .card-header {
+    padding: 18px 22px;
+    color: var(--white);
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+  }
+  .approach-card .card-header .num {
+    font-size: 28px;
+    font-weight: 800;
+    opacity: 0.6;
+  }
+  .approach-card .card-header .title {
+    font-size: 17px;
+    font-weight: 700;
+  }
+  .approach-card .card-header .tag {
+    display: block;
+    font-size: 12px;
+    font-weight: 400;
+    font-style: italic;
+    opacity: 0.8;
+  }
+  .approach-card.a1 .card-header { background: var(--amber); }
+  .approach-card.a2 .card-header { background: var(--teal); }
+  .approach-card.a3 .card-header { background: var(--blue); }
+  .approach-card .card-body {
+    padding: 20px 22px;
+    font-size: 14px;
+    color: var(--gray-muted);
+  }
+  .approaches-footer {
+    font-size: 14px;
+    font-style: italic;
+    color: var(--gray-muted);
+    margin-top: 8px;
+  }
+
+  /* ── Detail slides ── */
+  .approach-detail {
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 32px;
+    border: 1px solid var(--gray-border);
+    background: var(--white);
+  }
+  .approach-detail .detail-header {
+    padding: 20px 28px;
+    color: var(--white);
+    font-size: 22px;
+    font-weight: 700;
+  }
+  .approach-detail.a1 .detail-header { background: var(--amber); }
+  .approach-detail.a2 .detail-header { background: var(--teal); }
+  .approach-detail.a3 .detail-header { background: var(--blue); }
+
+  .approach-detail .detail-desc {
+    padding: 18px 28px;
+    font-size: 14px;
+    color: var(--gray-text);
+  }
+  .approach-detail.a1 .detail-desc { background: var(--amber-light); }
+  .approach-detail.a2 .detail-desc { background: var(--teal-light); }
+  .approach-detail.a3 .detail-desc { background: var(--blue-light); }
+
+  /* ── Day 2 experience block ── */
+  .day2-block {
+    padding: 16px 28px;
+    border-top: 1px solid var(--gray-border);
+    border-bottom: 1px solid var(--gray-border);
+    background: var(--gray-bg);
+    font-size: 14px;
+    color: var(--gray-text);
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+  }
+  .day2-block .day2-label {
+    font-weight: 700;
+    color: var(--navy);
+    white-space: nowrap;
+  }
+
+  .detail-columns {
+    display: grid;
+    grid-template-columns: 1fr 1px 1fr;
+    padding: 0 28px 24px;
+  }
+  .detail-columns .divider {
+    background: var(--gray-border);
+    margin: 0 20px;
+  }
+  .detail-col h4 {
+    font-size: 15px;
+    font-weight: 700;
+    margin: 20px 0 12px;
+  }
+  .detail-col h4.benefits { color: var(--green); }
+  .detail-col h4.risks { color: var(--red); }
+  .detail-col ul {
+    list-style: disc;
+    padding-left: 20px;
+    font-size: 13.5px;
+    color: var(--gray-text);
+  }
+  .detail-col ul li { margin-bottom: 6px; }
+
+  .detail-footer {
+    padding: 16px 28px;
+    font-size: 13.5px;
+    color: var(--gray-text);
+    border-top: 1px solid var(--gray-border);
+  }
+  .approach-detail.a1 .detail-footer { background: var(--amber-light); }
+  .approach-detail.a2 .detail-footer { background: var(--teal-light); }
+  .approach-detail.a3 .detail-footer { background: var(--blue-light); }
+
+  /* ── Comparison table ── */
+  .comparison-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid var(--gray-border);
+  }
+  .comparison-table thead th {
+    padding: 16px 20px;
+    font-weight: 700;
+    color: var(--white);
+    text-align: center;
+    font-size: 14px;
+  }
+  .comparison-table thead th:first-child {
+    background: var(--navy);
+    text-align: left;
+    width: 26%;
+  }
+  .comparison-table thead th:nth-child(2) { background: var(--amber); }
+  .comparison-table thead th:nth-child(3) { background: var(--teal); }
+  .comparison-table thead th:nth-child(4) { background: var(--blue); }
+
+  .comparison-table tbody td {
+    padding: 13px 20px;
+    border-bottom: 1px solid var(--gray-border);
+    text-align: center;
+  }
+  .comparison-table tbody td:first-child {
+    text-align: left;
+    font-weight: 600;
+    color: var(--navy);
+  }
+  .comparison-table tbody tr:nth-child(even) td:nth-child(2) { background: #FFF8EC; }
+  .comparison-table tbody tr:nth-child(even) td:nth-child(3) { background: #F0FAFB; }
+  .comparison-table tbody tr:nth-child(even) td:nth-child(4) { background: #F0F5FB; }
+
+  /* ── Stakeholders ── */
+  .stakeholder-cards { display: flex; flex-direction: column; gap: 20px; }
+  .stakeholder-card {
+    display: flex;
+    align-items: stretch;
+    background: var(--white);
+    border-radius: 8px;
+    border: 1px solid var(--gray-border);
+    overflow: hidden;
+  }
+  .stakeholder-card .accent { width: 5px; flex-shrink: 0; }
+  .stakeholder-card:nth-child(1) .accent { background: var(--amber); }
+  .stakeholder-card:nth-child(2) .accent { background: var(--teal); }
+  .stakeholder-card:nth-child(3) .accent { background: var(--blue); }
+  .stakeholder-card .info {
+    padding: 20px 24px;
+    min-width: 180px;
+    border-right: 1px solid var(--gray-border);
+  }
+  .stakeholder-card .info .role-title { font-weight: 700; color: var(--navy); font-size: 16px; }
+  .stakeholder-card .info .role-sub { font-size: 13px; font-style: italic; color: var(--teal); }
+  .stakeholder-card .quote {
+    padding: 20px 24px;
+    font-size: 14px;
+    color: var(--gray-text);
+    flex: 1;
+  }
+  .stakeholder-note {
+    font-size: 14px;
+    font-style: italic;
+    color: var(--gray-muted);
+    margin-top: 24px;
+  }
+
+  /* ── Decision framework ── */
+  .framework-question {
+    background: var(--gray-bg);
+    border: 2px solid var(--navy);
+    border-radius: 8px;
+    padding: 20px 28px;
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--navy);
+    text-align: center;
+    margin-bottom: 28px;
+  }
+
+  .framework-columns {
+    display: grid;
+    grid-template-columns: 1fr 60px 1fr;
+    gap: 0;
+    align-items: stretch;
+  }
+  .framework-option {
+    background: var(--white);
+    border-radius: 10px;
+    border: 2px solid var(--gray-border);
+    overflow: hidden;
+  }
+  .framework-option .opt-header {
+    padding: 14px 22px;
+    font-weight: 700;
+    font-size: 14px;
+    color: var(--white);
+  }
+  .framework-option.left .opt-header { background: var(--amber); }
+  .framework-option.right .opt-header { background: var(--blue); }
+  .framework-option .opt-body { padding: 22px; }
+  .framework-option .opt-body .rec-label {
+    font-size: 13px;
+    color: var(--gray-muted);
+    margin-bottom: 4px;
+  }
+  .framework-option .opt-body .rec-value {
+    font-size: 26px;
+    font-weight: 800;
+    margin-bottom: 14px;
+  }
+  .framework-option.left .opt-body .rec-value { color: var(--amber); }
+  .framework-option.right .opt-body .rec-value { color: var(--blue); }
+  .framework-option .opt-body p { font-size: 13.5px; color: var(--gray-text); }
+
+  .or-badge {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .or-badge span {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: var(--navy);
+    color: var(--white);
+    font-weight: 800;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* ── Next steps ── */
+  .next-steps { display: flex; flex-direction: column; gap: 16px; }
+  .step-card {
+    display: flex;
+    align-items: stretch;
+    background: var(--navy);
+    border-radius: 8px;
+    overflow: hidden;
+    color: var(--white);
+  }
+  .step-card .step-accent {
+    width: 5px;
+    flex-shrink: 0;
+    background: var(--teal);
+  }
+  .step-card .step-num {
+    font-size: 32px;
+    font-weight: 800;
+    padding: 16px 22px;
+    display: flex;
+    align-items: center;
+    opacity: 0.5;
+    min-width: 60px;
+    justify-content: center;
+  }
+  .step-card .step-body {
+    padding: 16px 20px 16px 0;
+    flex: 1;
+  }
+  .step-card .step-body p { font-size: 14px; line-height: 1.5; }
+  .step-card .step-body .owner {
+    font-size: 12px;
+    color: var(--teal);
+    font-style: italic;
+    margin-top: 4px;
+  }
+  .closing-note {
+    font-style: italic;
+    color: var(--teal);
+    margin-top: 28px;
+    font-size: 15px;
+  }
+
+  /* ── Print / responsive ── */
+  @media print {
+    .hero { padding: 40px; }
+    section { padding: 30px 20px; }
+    .approach-detail { break-inside: avoid; }
+    .comparison-table { font-size: 12px; }
+  }
+  @media (max-width: 768px) {
+    .hero { padding: 40px 24px; }
+    .hero h1 { font-size: 28px; }
+    section { padding: 36px 20px; }
+    .situation-grid,
+    .approaches-overview,
+    .framework-columns { grid-template-columns: 1fr; }
+    .detail-columns { grid-template-columns: 1fr; }
+    .detail-columns .divider { display: none; }
+    .or-badge { padding: 12px 0; }
+    .comparison-table { font-size: 12px; }
+    .comparison-table thead th,
+    .comparison-table tbody td { padding: 10px 12px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════ HERO ═══════════════ -->
+<div class="hero">
+  <div class="logo-bar"><img src="data:image/png;base64,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" alt="Enterprise Vision Technologies"></div>
+  <h1>AVI to F5 BIG-IP Migration</h1>
+  <div class="subtitle">Approach Comparison &amp; Decision Framework</div>
+  <div class="org-line">TransUnion &nbsp;|&nbsp; Enterprise Vision Technologies</div>
+</div>
+
+<!-- ═══════════════ THE SITUATION ═══════════════ -->
+<section>
+  <h2>Decision Context</h2>
+  <div class="situation-grid">
+    <div class="situation-card">
+      <div class="accent"></div>
+      <div class="content">
+        <h3>Current SOW Goal</h3>
+        <p>Full Infrastructure as Code (IaC) with up to 20 standardized Harness blueprints consumed via OneDev 2.0 &#8212; enforcing corporate security policy, RBAC, and self-service pipelines.</p>
+      </div>
+      <div class="stat"><span class="num">20</span><span class="label">Harness Blueprints</span></div>
+    </div>
+    <div class="situation-card">
+      <div class="accent"></div>
+      <div class="content">
+        <h3>Scale of Effort</h3>
+        <p>Approximately 4,000 VIPs across 69 business unit tenants must be recreated on F5 BIG-IP before the October 2026 AVI end-of-life deadline.</p>
+      </div>
+      <div class="stat"><span class="num">~4,000</span><span class="label">VIPs to Recreate</span></div>
+    </div>
+    <div class="situation-card">
+      <div class="accent"></div>
+      <div class="content">
+        <h3>Timeline Pressure</h3>
+        <p>The full blueprint approach requires significant ramp-up time that may not align with the October deadline. A faster path is being evaluated.</p>
+      </div>
+      <div class="stat"><span class="num">69</span><span class="label">Business Unit Tenants</span></div>
+    </div>
+    <div class="situation-card">
+      <div class="accent"></div>
+      <div class="content">
+        <h3>Refined Approach</h3>
+        <p>Based on the scale of the environment and timeline considerations, an additional approach is being evaluated: using Terraform to codify VIP configurations and integrate with existing Harness pipelines. This provides a faster path to execution while still introducing automation and repeatability. This document compares all three approaches to support an informed decision.</p>
+      </div>
+      <div class="stat"><span class="num">3</span><span class="label">Approaches</span></div>
+    </div>
+    <div class="situation-card full-width">
+      <div class="accent"></div>
+      <div class="content">
+        <h3>Self-Service Requirement</h3>
+        <p>Today, AVI is self-service for app owners. The F5 solution must preserve that model &#8212; business units need the ability to manage their own workloads without creating an operational bottleneck.</p>
+      </div>
+      <div class="stat"><span class="num" style="font-size: 22px;">Self-Serve</span><span class="label">Required</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ THREE APPROACHES OVERVIEW ═══════════════ -->
+<section>
+  <h2>Three Approaches</h2>
+  <div class="approaches-overview">
+    <div class="approach-card a1">
+      <div class="card-header">
+        <span class="num">1</span>
+        <div><span class="title">Manual / CLI</span><span class="tag">Lift &amp; Shift</span></div>
+      </div>
+      <div class="card-body">Recreate all existing AVI VIPs on F5 BIG-IP via the GUI or CLI. Business units then cut over their workloads by flipping DNS. No automation layer, no enforcement of standards.</div>
+    </div>
+    <div class="approach-card a2">
+      <div class="card-header">
+        <span class="num">2</span>
+        <div><span class="title">Terraform + Harness</span><span class="tag">Middle Ground</span></div>
+      </div>
+      <div class="card-body">Use Terraform to codify and recreate all VIPs on F5, with code teams can plug into their own Harness pipelines. Faster than the full IaC blueprint approach, with automation and repeatability.</div>
+    </div>
+    <div class="approach-card a3">
+      <div class="card-header">
+        <span class="num">3</span>
+        <div><span class="title">Full IaC / Blueprint SOW</span><span class="tag">Standards-First</span></div>
+      </div>
+      <div class="card-body">Current SOW approach. Build up to 20 standardized Harness blueprints consumed via OneDev 2.0, enforcing corporate security policy and standards. Teams self-service through the platform.</div>
+    </div>
+  </div>
+  <div class="approaches-footer">Each approach represents a different balance of speed, standardization, and long-term supportability.</div>
+</section>
+
+<!-- ═══════════════ APPROACH 1 DETAIL ═══════════════ -->
+<section>
+  <div class="approach-detail a1">
+    <div class="detail-header">Approach 1 &nbsp;|&nbsp; Manual / CLI &nbsp;(Lift &amp; Shift)</div>
+    <div class="detail-desc">Recreate existing AVI VIPs on F5 BIG-IP via the GUI or CLI (TMSH). Business units then cut over their own workloads by flipping DNS. No pipeline automation, no standards enforcement.</div>
+    <div class="day2-block">
+      <span class="day2-label">Day 2 Experience:</span> Adding or modifying a VIP is done through the F5 GUI or CLI (TMSH). No Terraform knowledge required. With administrative partitions, business units may be able to manage their own VIPs directly within their assigned partition.
+    </div>
+    <div class="detail-columns">
+      <div class="detail-col">
+        <h4 class="benefits">&#x2714; &nbsp;Benefits</h4>
+        <ul>
+          <li>Fastest path to VIP recreation and cutover</li>
+          <li>Lowest technical complexity per individual migration task</li>
+          <li>No dependency on Harness/Terraform skill ramp-up</li>
+          <li>Business units have direct control over their workloads</li>
+          <li>Fewest moving parts &#8212; lower technical risk during cutover</li>
+        </ul>
+      </div>
+      <div class="divider"></div>
+      <div class="detail-col">
+        <h4 class="risks">&#x2718; &nbsp;Risks &amp; Tradeoffs</h4>
+        <ul>
+          <li>Requires significant hands-on support &#8212; limited ability to execute at scale without additional assistance</li>
+          <li>No standards enforcement &#8212; configurations will diverge</li>
+          <li>No audit trail or change management via pipeline</li>
+          <li>No uniform management standard &#8212; each team may configure F5 independently</li>
+          <li>Operational burden lands on IT operations long-term</li>
+          <li>Self-service is possible via administrative partitions, but without guardrails or standards enforcement across tenants</li>
+          <li>Does not address TransUnion&#8217;s IaC/OneDev 2.0 strategic goal</li>
+          <li>Transitioning to IaC later means rework &#8212; mixing GUI-managed and code-managed VIPs creates configuration drift and operational risk</li>
+        </ul>
+      </div>
+    </div>
+    <div class="detail-footer">&#x26A1; <strong>Key Tradeoff:</strong> Fastest path to the October 31 finish line. Accepts technical debt in exchange for speed, but requires significant hands-on support and a follow-on engagement to standardize.</div>
+  </div>
+
+  <!-- ═══════════════ APPROACH 2 DETAIL ═══════════════ -->
+  <div class="approach-detail a2">
+    <div class="detail-header">Approach 2 &nbsp;|&nbsp; Terraform + Harness &nbsp;(Middle Ground)</div>
+    <div class="detail-desc">Extract AVI configurations into Terraform code and provide each business unit with the code and instructions to integrate into their own Harness pipelines. VIPs are recreated programmatically with version-controlled state. Teams own their repos and pipelines.</div>
+    <div class="day2-block">
+      <span class="day2-label">Day 2 Experience:</span> Adding or modifying a VIP is done by updating Terraform code in the team&#8217;s repo and running it through a Harness pipeline. Requires Terraform and Git familiarity. App teams can self-service if they have the skills; operations provides the initial scaffolding but is not a bottleneck.
+    </div>
+    <div class="detail-columns">
+      <div class="detail-col">
+        <h4 class="benefits">&#x2714; &nbsp;Benefits</h4>
+        <ul>
+          <li>Faster than full IaC blueprints &#8212; less ramp-up required</li>
+          <li>All VIP configurations captured in version-controlled code with state</li>
+          <li>Provides repeatable, auditable process for recreating VIPs</li>
+          <li>Establishes a Terraform/Harness foundation for future work</li>
+          <li>Operations is already comfortable with Terraform</li>
+          <li>Teams own their own repos and pipelines &#8212; modular and self-service</li>
+        </ul>
+      </div>
+      <div class="divider"></div>
+      <div class="detail-col">
+        <h4 class="risks">&#x2718; &nbsp;Risks &amp; Tradeoffs</h4>
+        <ul>
+          <li>Still requires Terraform + Harness ramp-up time</li>
+          <li>Does not fully enforce corporate security policy / standards</li>
+          <li>Requires a follow-on effort to add the blueprint layer for net-new workloads</li>
+          <li>Business units must integrate Terraform code into their own pipelines</li>
+          <li>Scope / LOE not yet sized &#8212; requires a revised SOW</li>
+          <li>Best practice is to commit to one management approach &#8212; VIPs managed via Terraform should not be modified manually to avoid state drift</li>
+        </ul>
+      </div>
+    </div>
+    <div class="detail-footer">&#x26A1; <strong>Key Tradeoff:</strong> Balances speed with a degree of standardization. Gets VIPs recreated with state and leaves a usable code foundation. Likely requires a new or amended SOW to size properly.</div>
+  </div>
+
+  <!-- ═══════════════ APPROACH 3 DETAIL ═══════════════ -->
+  <div class="approach-detail a3">
+    <div class="detail-header">Approach 3 &nbsp;|&nbsp; Full IaC / Blueprint SOW &nbsp;(Standards-First)</div>
+    <div class="detail-desc">The current SOW approach. Build up to 20 standardized Harness blueprints consumed via OneDev 2.0, with RBAC, self-service pipelines, operational guides, and a full cutover playbook. End users never see back-office operations &#8212; operations manages everything as a service.</div>
+    <div class="day2-block">
+      <span class="day2-label">Day 2 Experience:</span> Adding or modifying a VIP is done through the OneDev 2.0 self-service portal. Select a blueprint, fill in parameters, submit. No Terraform or F5 knowledge required &#8212; RBAC and standards are enforced automatically. Operations manages blueprints, not individual VIPs.
+    </div>
+    <div class="detail-columns">
+      <div class="detail-col">
+        <h4 class="benefits">&#x2714; &nbsp;Benefits</h4>
+        <ul>
+          <li>Fully enforces corporate security policy and standards</li>
+          <li>Self-service model for business units via Harness pipelines</li>
+          <li>RBAC controls limit blast radius of individual team changes</li>
+          <li>Long-term operational playbook and Day-1 readiness included</li>
+          <li>Supports the strategic IaC / OneDev 2.0 vision</li>
+          <li>Version-controlled, auditable infrastructure for all F5 workloads</li>
+        </ul>
+      </div>
+      <div class="divider"></div>
+      <div class="detail-col">
+        <h4 class="risks">&#x2718; &nbsp;Risks &amp; Tradeoffs</h4>
+        <ul>
+          <li>Longest ramp-up time &#8212; puts October 31 deadline at risk</li>
+          <li>Requires teams to learn Harness / IaC before migrating workloads</li>
+          <li>Highest upfront cost and engagement complexity</li>
+          <li>Terraform familiarity varies across teams &#8212; knowledge gaps possible</li>
+          <li>Workloads may have undocumented legacy configs that resist templating</li>
+          <li>Some VIPs will be exceptions not covered by the 20 blueprints</li>
+          <li>Requires full organizational commitment &#8212; all VIP management must flow through the blueprint model to maintain consistency and avoid drift</li>
+        </ul>
+      </div>
+    </div>
+    <div class="detail-footer">&#x26A1; <strong>Key Tradeoff:</strong> Prioritizes long-term standardization and operational health. Highest business value but requires timeline flexibility beyond October 31 or a phased plan.</div>
+  </div>
+</section>
+
+<!-- ═══════════════ COMPARISON TABLE ═══════════════ -->
+<section>
+  <h2>Comparison at a Glance</h2>
+  <table class="comparison-table">
+    <thead>
+      <tr>
+        <th>Criteria</th>
+        <th>1 &nbsp;Manual / CLI</th>
+        <th>2 &nbsp;Terraform + Harness</th>
+        <th>3 &nbsp;Full IaC SOW</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>Speed to Completion</td><td>Fastest</td><td>Moderate</td><td>Slowest</td></tr>
+      <tr><td>October Deadline Risk</td><td>Lowest</td><td>Medium</td><td>Highest</td></tr>
+      <tr><td>Standards Enforcement</td><td>None</td><td>Partial</td><td>Full</td></tr>
+      <tr><td>Long-Term Supportability</td><td>Lowest</td><td>Moderate</td><td>Highest</td></tr>
+      <tr><td>Ramp-Up Time</td><td>Shortest</td><td>Moderate</td><td>Longest</td></tr>
+      <tr><td>Hands-On Assistance Required</td><td>Highest</td><td>Moderate</td><td>Lowest</td></tr>
+      <tr><td>Day 2 Self-Service for App Teams</td><td>None</td><td>Partial</td><td>Full</td></tr>
+      <tr><td>TU Skill Required</td><td>F5 GUI / CLI</td><td>Terraform + Harness</td><td>Full IaC / Harness</td></tr>
+      <tr><td>Technical Debt</td><td>Highest</td><td>Moderate</td><td>Lowest</td></tr>
+    </tbody>
+  </table>
+  <div style="margin-top: 20px; padding: 16px 22px; background: var(--amber-light); border-left: 4px solid var(--amber); border-radius: 0 6px 6px 0; font-size: 14px; color: var(--gray-text);">
+    <strong>Note:</strong> Total engagement cost cannot be determined until an approach is selected. The manual/CLI path appears simplest on paper, but with ~4,000 VIPs across 69 tenants, it requires the most hands-on management and oversight. A revised LOE will be scoped once direction is confirmed.
+  </div>
+</section>
+
+<!-- ═══════════════ DECISION FRAMEWORK ═══════════════ -->
+<section>
+  <h2>Recommended Decision Framework</h2>
+  <div class="framework-question">Is October 31 non-negotiable, or can the timeline flex to achieve the right long-term outcome?</div>
+  <div class="framework-columns">
+    <div class="framework-option left">
+      <div class="opt-header">October 31 is NON-NEGOTIABLE</div>
+      <div class="opt-body">
+        <div class="rec-label">Suggested Path:</div>
+        <div class="rec-value">Approach 1 or 2</div>
+        <p>Start with the fastest path to recreate all VIPs and meet the deadline. Accept that standardization will be a follow-on effort. We can scope a Phase 2 engagement to layer in IaC governance after cutover.</p>
+      </div>
+    </div>
+    <div class="or-badge"><span>OR</span></div>
+    <div class="framework-option right">
+      <div class="opt-header">Timeline can flex for the right outcome</div>
+      <div class="opt-body">
+        <div class="rec-label">Suggested Path:</div>
+        <div class="rec-value">Approach 3 (current SOW)</div>
+        <p>Proceed with the full IaC blueprint approach. Establish a phased plan that prioritizes high-volume VIP types first. Accept that some workloads may require a pre-October interim solution.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ NEXT STEPS ═══════════════ -->
+<section>
+  <h2>Recommended Next Steps</h2>
+  <div class="next-steps">
+    <div class="step-card">
+      <div class="step-accent"></div>
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <p>Schedule an alignment meeting with all key stakeholders to review this comparison and make a final approach decision.</p>
+      </div>
+    </div>
+    <div class="step-card">
+      <div class="step-accent"></div>
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <p>Scope a revised LOE for Approach 2 (Terraform + Harness) so all three options have comparable cost visibility.</p>
+      </div>
+    </div>
+    <div class="step-card">
+      <div class="step-accent"></div>
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <p>Confirm available budget so the engagement can be right-sized to available funds.</p>
+      </div>
+    </div>
+    <div class="step-card">
+      <div class="step-accent"></div>
+      <div class="step-num">4</div>
+      <div class="step-body">
+        <p>Once an approach is selected, execute a new or amended SOW and begin engagement within 2 weeks of signed authorization.</p>
+      </div>
+    </div>
+  </div>
+  <div class="closing-note">We are ready to move forward once direction is confirmed.</div>
+</section>
+
+</body>
+</html>
