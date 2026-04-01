@@ -19,6 +19,15 @@
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   html { scroll-behavior: smooth; }
+
+  /* EVT Docs nav bar */
+  .evt-docs-nav { position: sticky; top: 0; z-index: 999; background: rgba(13,17,23,0.95); backdrop-filter: blur(12px); border-bottom: 1px solid #30363d; padding: 0 2rem; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+  .evt-docs-nav-inner { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; height: 48px; }
+  .evt-docs-nav a { color: #8b949e; text-decoration: none; font-size: 0.85rem; font-weight: 500; transition: color 0.2s; }
+  .evt-docs-nav a:hover { color: #58a6ff; }
+  .evt-docs-nav .evt-brand { display: flex; align-items: center; gap: 8px; color: #e6edf3; font-weight: 600; font-size: 0.9rem; }
+  .evt-docs-nav .evt-brand img { height: 28px; }
+  .evt-docs-nav .evt-links { display: flex; gap: 1.25rem; }
   body {
     font-family: Arial, Helvetica, sans-serif;
     color: var(--ink);
@@ -207,6 +216,15 @@
 </style>
 </head>
 <body>
+<nav class="evt-docs-nav">
+  <div class="evt-docs-nav-inner">
+    <a href="../" class="evt-brand"><img src="../images/EVT_logo_RGB_BC.png" alt="EVT">EVT Docs</a>
+    <div class="evt-links">
+      <a href="../">Home</a>
+      <a href="./">Presentations</a>
+    </div>
+  </div>
+</nav>
 
 <!-- TOPBAR -->
 <div class="topbar">
