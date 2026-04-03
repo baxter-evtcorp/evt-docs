@@ -1,0 +1,1094 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Walmart × SUSE — Active Contracts</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --walmart-blue: #0071ce;
+  --walmart-blue-rgb: 0, 113, 206;
+  --suse-green: #30ba78;
+  --suse-green-rgb: 48, 186, 120;
+  --bg-primary: #0a0d14;
+  --bg-elevated: #0f131c;
+  --bg-surface: #161b28;
+  --bg-hover: #1e2536;
+  --text-primary: #ffffff;
+  --text-secondary: rgba(255,255,255,0.7);
+  --text-muted: rgba(255,255,255,0.45);
+  --accent: var(--walmart-blue);
+  --accent-glow: rgba(var(--walmart-blue-rgb), 0.25);
+  --border: rgba(255,255,255,0.08);
+  --success: #10b981;
+  --warning: #f59e0b;
+  --error: #ef4444;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+/* ── Header ── */
+.header {
+  background: var(--bg-elevated);
+  border-bottom: 1px solid var(--border);
+  padding: 28px 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.header-left h1 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+.header-left h1 span { color: var(--text-muted); font-weight: 400; }
+.header-left p { color: var(--text-secondary); font-size: 0.875rem; margin-top: 4px; }
+.header-right {
+  display: flex;
+  gap: 24px;
+  align-items: center;
+}
+.header-badge {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+.header-badge strong { color: var(--text-primary); font-weight: 600; }
+
+/* ── Tabs ── */
+.tabs {
+  display: flex;
+  gap: 0;
+  background: var(--bg-elevated);
+  border-bottom: 1px solid var(--border);
+  padding: 0 40px;
+}
+.tab {
+  padding: 14px 24px;
+  cursor: pointer;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s ease;
+  user-select: none;
+}
+.tab:hover { color: var(--text-secondary); }
+.tab.active {
+  color: var(--text-primary);
+  border-bottom-color: var(--accent);
+}
+
+/* ── Content ── */
+.content { padding: 32px 40px; max-width: 1280px; }
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+/* ── Cards ── */
+.card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 20px;
+}
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+.card-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+.card-badge {
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 4px 12px;
+  border-radius: 20px;
+}
+.badge-active { background: rgba(16,185,129,0.15); color: var(--success); }
+.badge-pending { background: rgba(245,158,11,0.15); color: var(--warning); }
+.badge-expired { background: rgba(239,68,68,0.15); color: var(--error); }
+.badge-proposed { background: rgba(var(--walmart-blue-rgb),0.15); color: var(--accent); }
+
+/* ── Tables ── */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+th {
+  text-align: left;
+  padding: 10px 14px;
+  color: var(--text-muted);
+  font-weight: 500;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-bottom: 1px solid var(--border);
+}
+td {
+  padding: 12px 14px;
+  color: var(--text-secondary);
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+tr:last-child td { border-bottom: none; }
+tr:hover td { background: rgba(255,255,255,0.02); }
+td.highlight { color: var(--text-primary); font-weight: 600; }
+
+/* ── KPI Row ── */
+.kpi-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 28px;
+}
+.kpi {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+}
+.kpi-label {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 6px;
+}
+.kpi-value {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+.kpi-sub {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+/* ── Grid layouts ── */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
+
+/* ── Timeline ── */
+.timeline { position: relative; padding-left: 24px; }
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 6px;
+  top: 8px;
+  bottom: 8px;
+  width: 2px;
+  background: var(--border);
+}
+.timeline-item {
+  position: relative;
+  margin-bottom: 20px;
+}
+.timeline-dot {
+  position: absolute;
+  left: -24px;
+  top: 6px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 2px solid var(--bg-surface);
+}
+.dot-active { background: var(--success); }
+.dot-pending { background: var(--warning); }
+.dot-future { background: var(--text-muted); }
+.timeline-date {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+.timeline-title {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-top: 2px;
+}
+.timeline-desc {
+  font-size: 0.825rem;
+  color: var(--text-secondary);
+  margin-top: 4px;
+}
+
+/* ── Section titles ── */
+.section-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 16px;
+  color: var(--text-primary);
+}
+.section-subtitle {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin-bottom: 20px;
+}
+
+/* ── Info rows ── */
+.info-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  font-size: 0.875rem;
+}
+.info-row:last-child { border-bottom: none; }
+.info-label { color: var(--text-muted); }
+.info-value { color: var(--text-primary); font-weight: 500; }
+
+/* ── Bar chart visual ── */
+.bar-chart { margin-top: 16px; }
+.bar-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+.bar-label {
+  width: 50px;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  text-align: right;
+  flex-shrink: 0;
+}
+.bar-track {
+  flex: 1;
+  height: 28px;
+  background: rgba(255,255,255,0.04);
+  border-radius: 6px;
+  overflow: hidden;
+  position: relative;
+}
+.bar-fill {
+  height: 100%;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  padding-left: 10px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  transition: width 0.6s ease;
+}
+
+/* ── Footer ── */
+.footer {
+  padding: 24px 40px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: var(--text-muted);
+  font-size: 0.75rem;
+  margin-top: 40px;
+}
+
+/* ── Callout ── */
+.callout {
+  background: rgba(var(--walmart-blue-rgb), 0.08);
+  border: 1px solid rgba(var(--walmart-blue-rgb), 0.2);
+  border-radius: 10px;
+  padding: 16px 20px;
+  margin-bottom: 20px;
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+}
+.callout strong { color: var(--accent); }
+
+/* ── Responsive ── */
+@media (max-width: 900px) {
+  .kpi-row { grid-template-columns: repeat(2, 1fr); }
+  .grid-2, .grid-3 { grid-template-columns: 1fr; }
+  .content { padding: 20px; }
+  .header { padding: 20px; flex-direction: column; gap: 12px; }
+  .tabs { padding: 0 20px; overflow-x: auto; }
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════ HEADER ═══════ -->
+<div class="header">
+  <div class="header-left">
+    <h1>Walmart × SUSE <span>— Active Contracts</span></h1>
+    <p>Prepared by Enterprise Vision Technologies &nbsp;|&nbsp; Supplier #126055</p>
+  </div>
+  <div class="header-right">
+    <div class="header-badge">Contract &nbsp;<strong>CW482112</strong></div>
+    <div class="header-badge" style="border-color: rgba(16,185,129,0.3); background: rgba(16,185,129,0.08);">Status &nbsp;<strong style="color: var(--success);">Active</strong></div>
+    <div class="header-badge">As of &nbsp;<strong>April 2026</strong></div>
+  </div>
+</div>
+
+<!-- ═══════ TABS ═══════ -->
+<div class="tabs">
+  <div class="tab active" data-tab="overview">Overview</div>
+  <div class="tab" data-tab="sles-ela">SLES ELA</div>
+  <div class="tab" data-tab="mls-pilot">MLS Pilot</div>
+  <div class="tab" data-tab="timeline">Key Dates</div>
+</div>
+
+<!-- ═══════ CONTENT ═══════ -->
+<div class="content">
+
+<!-- ─── OVERVIEW TAB ─── -->
+<div class="tab-panel active" id="overview">
+
+  <div class="kpi-row">
+    <div class="kpi">
+      <div class="kpi-label">Total Active Value</div>
+      <div class="kpi-value" style="color: var(--success);">$13.25M</div>
+      <div class="kpi-sub">SLES ELA + MLS Pilot combined</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">SLES Subscriptions (FY26)</div>
+      <div class="kpi-value">15,794</div>
+      <div class="kpi-sub">DC, HO, Stores, NAS, RXP, Other, IFL, SAP, HA</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">MLS 1-VM Licenses</div>
+      <div class="kpi-value" style="color: var(--suse-green);">1,000</div>
+      <div class="kpi-sub">SUSE + RHEL unified support</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Next Key Decision</div>
+      <div class="kpi-value" style="color: var(--warning);">7/31/2026</div>
+      <div class="kpi-sub">Edge Swap #1 deadline</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">Active Contracts Summary</div>
+    </div>
+    <div class="section-subtitle">Walmart's three primary SUSE agreements in force</div>
+    <table>
+      <thead>
+        <tr>
+          <th>Contract</th>
+          <th>Quote / PO</th>
+          <th>Amount</th>
+          <th>Term</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="highlight">SLES ELA 3-Year Renewal</td>
+          <td>Q-181342 / PO 6304884463 + 6304884464</td>
+          <td class="highlight">$12,240,000</td>
+          <td>2/1/2025 – 1/31/2028</td>
+          <td><span class="badge-active">Executed</span></td>
+        </tr>
+        <tr>
+          <td class="highlight">SUSE MLS Pilot</td>
+          <td>Q-222008 / PO 6308245561</td>
+          <td class="highlight">$1,009,500</td>
+          <td>11/1/2025 – 2/28/2029</td>
+          <td><span class="badge-active">Active</span></td>
+        </tr>
+        <tr>
+          <td class="highlight">LTSS (Partial)</td>
+          <td>PO 6302828717</td>
+          <td class="highlight">$498,600</td>
+          <td>Through 6/30/2026</td>
+          <td><span class="badge-active">Active</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Walmart Contacts</div>
+      </div>
+      <div class="info-row">
+        <div class="info-label">SLES ELA Procurement</div>
+        <div class="info-value">Nadia Calderon</div>
+      </div>
+      <div class="info-row">
+        <div class="info-label">SLES ELA Ordered By</div>
+        <div class="info-value">Cindy Whiteaker (1/15/2025)</div>
+      </div>
+      <div class="info-row">
+        <div class="info-label">MLS Pilot Owner</div>
+        <div class="info-value">Josh Russell (joshua.russell@walmart.com)</div>
+      </div>
+      <div class="info-row">
+        <div class="info-label">LTSS Contact</div>
+        <div class="info-value">Brad Hudgins (7/14/2024)</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">SUSE Contacts</div>
+      </div>
+      <div class="info-row">
+        <div class="info-label">Sales Rep</div>
+        <div class="info-value">Daniel Thaure</div>
+      </div>
+      <div class="info-row">
+        <div class="info-label">Enterprise AE</div>
+        <div class="info-value">Blaine Glaser (blaine.glaser@suse.com)</div>
+      </div>
+      <div class="info-row">
+        <div class="info-label">SUSE MLA Contract</div>
+        <div class="info-value">#M40696757 (#00029205)</div>
+      </div>
+      <div class="info-row">
+        <div class="info-label">EVT Account Exec</div>
+        <div class="info-value">Todd Allen</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ─── SLES ELA TAB ─── -->
+<div class="tab-panel" id="sles-ela">
+
+  <div class="callout">
+    <strong>SLES ELA 3-Year Renewal (Executed)</strong> — Quote Q-181342 (12/17/2024), Contract #00029205, executed via PO 6304884463 ($10,752,403.67) + PO 6304884464 ($1,487,596.33) = $12,240,000 total. Term: 2/1/2025 – 1/31/2028. Includes 11.38% bundle discount.
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">Renewal Execution Details</div>
+    </div>
+    <div class="info-row">
+      <div class="info-label">SUSE Quote</div>
+      <div class="info-value">Q-181342 (12/17/2024)</div>
+    </div>
+    <div class="info-row">
+      <div class="info-label">SUSE Contract #</div>
+      <div class="info-value">00029205</div>
+    </div>
+    <div class="info-row">
+      <div class="info-label">Walmart POs</div>
+      <div class="info-value">6304884463 + 6304884464</div>
+    </div>
+    <div class="info-row">
+      <div class="info-label">PO 1 Amount</div>
+      <div class="info-value">$10,752,403.67</div>
+    </div>
+    <div class="info-row">
+      <div class="info-label">PO 2 Amount</div>
+      <div class="info-value">$1,487,596.33</div>
+    </div>
+    <div class="info-row">
+      <div class="info-label">Total Executed Value</div>
+      <div class="info-value" style="color: var(--success); font-weight: 700;">$12,240,000</div>
+    </div>
+    <div class="info-row">
+      <div class="info-label">Ordered By</div>
+      <div class="info-value">Cindy Whiteaker, 1/15/2025</div>
+    </div>
+    <div class="info-row">
+      <div class="info-label">Term</div>
+      <div class="info-value">2/1/2025 – 1/31/2028 (3 years)</div>
+    </div>
+    <div class="info-row">
+      <div class="info-label">Bundle Discount</div>
+      <div class="info-value">11.38% off list</div>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Year 1 (2/1/2025 – 1/31/2026)</div>
+      </div>
+      <div class="info-row">
+        <div class="info-label">SLES + SUSE Manager</div>
+        <div class="info-value">15,794 subs @ $218</div>
+      </div>
+      <div class="info-row">
+        <div class="info-label">Year 1 Total</div>
+        <div class="info-value">$3,443,092</div>
+      </div>
+      <div class="info-row">
+        <div class="info-label">SUSE Assist</div>
+        <div class="info-value">2 @ $10,500</div>
+      </div>
+      <div class="info-row">
+        <div class="info-label">Assist Cost</div>
+        <div class="info-value">$21,000</div>
+      </div>
+      <div class="info-row">
+        <div class="info-label">SLES IBM z 1 IFL</div>
+        <div class="info-value">14 @ $2,857</div>
+      </div>
+      <div class="info-row">
+        <div class="info-label">IFL Cost</div>
+        <div class="info-value">$40,000</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Year 2 Split Period</div>
+      </div>
+      <div class="info-row">
+        <div class="info-label">H1 (2/1–7/31/2026)</div>
+        <div class="info-value">13,075 subs @ $109</div>
+      </div>
+      <div class="info-row">
+        <div class="info-label">H1 Total</div>
+        <div class="info-value">$1,425,175</div>
+      </div>
+      <div class="info-row">
+        <div class="info-label">H2 (8/1/2026–1/31/2027)</div>
+        <div class="info-value">Edge Bundle transition</div>
+      </div>
+      <div class="info-row">
+        <div class="info-label">Cloud Native Edge (150)</div>
+        <div class="info-value">150 @ $5,376</div>
+      </div>
+      <div class="info-row">
+        <div class="info-label">Edge Bundle Cost</div>
+        <div class="info-value">$806,403</div>
+      </div>
+      <div class="info-row">
+        <div class="info-label">Remaining SLES (7,648)</div>
+        <div class="info-value">7,648 @ $109</div>
+      </div>
+      <div class="info-row">
+        <div class="info-label">SLES H2 Cost</div>
+        <div class="info-value">$833,632</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">Year 3 (2/1/2027 – 1/31/2028)</div>
+    </div>
+    <div class="info-row">
+      <div class="info-label">Cloud Native Edge Bundle</div>
+      <div class="info-value">235 bundles @ $7,638 = $1,794,907</div>
+    </div>
+    <div class="info-row">
+      <div class="info-label">SLES + SUSE Manager</div>
+      <div class="info-value">5,039 subs @ $218 = $1,098,502</div>
+    </div>
+    <div class="info-row">
+      <div class="info-label">Year 3 Total</div>
+      <div class="info-value" style="color: var(--text-primary); font-weight: 700;">$2,893,409</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">LTSS Components (Embedded in Renewal)</div>
+      <div class="card-badge badge-active">~$1.49M Total</div>
+    </div>
+    <div class="section-subtitle">Long-Term Support (Reactive + Core) spread across renewal period</div>
+    <table>
+      <thead>
+        <tr>
+          <th>Product</th>
+          <th>Support Type</th>
+          <th>Period</th>
+          <th>Amount</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="highlight">SLES 11 SP4</td>
+          <td>Long Term Core</td>
+          <td>4/2025–3/2026</td>
+          <td>$200,000</td>
+        </tr>
+        <tr>
+          <td class="highlight">SLES 11 SP4</td>
+          <td>Long Term Core</td>
+          <td>4/2026–3/2027</td>
+          <td>$200,010</td>
+        </tr>
+        <tr>
+          <td class="highlight">SLES 12 SP3</td>
+          <td>Reactive</td>
+          <td>2/2025–6/2025</td>
+          <td>$35,700</td>
+        </tr>
+        <tr>
+          <td class="highlight">SLES 12 SP3</td>
+          <td>Reactive</td>
+          <td>7/2025–1/2028</td>
+          <td>$400,000</td>
+        </tr>
+        <tr>
+          <td class="highlight">SLES 12 SP4</td>
+          <td>Reactive</td>
+          <td>7/2026–1/2028</td>
+          <td>$260,000</td>
+        </tr>
+        <tr>
+          <td class="highlight">SLES 15 SP3</td>
+          <td>Reactive</td>
+          <td>7/2026–1/2028</td>
+          <td>$135,660</td>
+        </tr>
+        <tr>
+          <td class="highlight">SLES 15 SP1</td>
+          <td>Reactive</td>
+          <td>7/2026–1/2027</td>
+          <td>$49,980</td>
+        </tr>
+        <tr>
+          <td class="highlight">SLES 15 SP1</td>
+          <td>Reactive</td>
+          <td>2/2027–1/2028</td>
+          <td>$160,000</td>
+        </tr>
+        <tr>
+          <td class="highlight">HA Extension</td>
+          <td>46 Sockets</td>
+          <td>2/2025–1/2028</td>
+          <td>$48,303</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">Cloud Native Edge Swap Rights</div>
+    </div>
+    <div class="section-subtitle">Allows Walmart to convert Edge bundles back to SLES subscriptions at key decision points</div>
+
+    <div style="margin-bottom: 20px;">
+      <h4 style="color: var(--text-primary); margin-bottom: 12px; font-size: 0.95rem;">Swap Decision #1: By 7/31/2026</h4>
+      <div class="info-row">
+        <div class="info-label">Edge Bundles Available</div>
+        <div class="info-value">150 (Cloud Native Edge Bundle, B-CNE-20C-PS1)</div>
+      </div>
+      <div class="info-row">
+        <div class="info-label">Conversion Ratio</div>
+        <div class="info-value">Up to 13,075 SLES subs @ $218/unit</div>
+      </div>
+      <div class="info-row">
+        <div class="info-label">Replacement SKU</div>
+        <div class="info-value">B-874-008231 (SLES + SUSE Manager)</div>
+      </div>
+    </div>
+
+    <div style="margin-bottom: 12px;">
+      <h4 style="color: var(--text-primary); margin-bottom: 12px; font-size: 0.95rem;">Swap Decision #2: By 1/31/2027</h4>
+      <div class="info-row">
+        <div class="info-label">Edge Bundles Available</div>
+        <div class="info-value">235 (Cloud Native Edge Bundle)</div>
+      </div>
+      <div class="info-row">
+        <div class="info-label">Conversion Ratio</div>
+        <div class="info-value">Up to 10,402 SLES subs @ $218/unit</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">Subscription Distribution (Current Footprint)</div>
+    </div>
+    <div class="section-subtitle">FY26 baseline: 15,794 subscriptions across Walmart infrastructure</div>
+    <div class="bar-chart">
+      <div class="bar-row">
+        <div class="bar-label" style="width: 100px;">Data Center</div>
+        <div class="bar-track">
+          <div class="bar-fill" style="width: 21%; background: rgba(48,186,120,0.6);">3,307</div>
+        </div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label" style="width: 100px;">Home Office</div>
+        <div class="bar-track">
+          <div class="bar-fill" style="width: 12%; background: rgba(48,186,120,0.6);">1,899</div>
+        </div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label" style="width: 100px;">Stores ISP</div>
+        <div class="bar-track">
+          <div class="bar-fill" style="width: 34%; background: rgba(48,186,120,0.6);">5,350</div>
+        </div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label" style="width: 100px;">NAS</div>
+        <div class="bar-track">
+          <div class="bar-fill" style="width: 15%; background: rgba(48,186,120,0.6);">2,418</div>
+        </div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label" style="width: 100px;">RXP</div>
+        <div class="bar-track">
+          <div class="bar-fill" style="width: 17%; background: rgba(48,186,120,0.6);">2,673</div>
+        </div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label" style="width: 100px;">Other</div>
+        <div class="bar-track">
+          <div class="bar-fill" style="width: 1%; background: rgba(48,186,120,0.6);">147</div>
+        </div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label" style="width: 100px;">IFL</div>
+        <div class="bar-track">
+          <div class="bar-fill" style="width: 0.4%; background: rgba(48,186,120,0.6);">64</div>
+        </div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label" style="width: 100px;">SAP</div>
+        <div class="bar-track">
+          <div class="bar-fill" style="width: 1.5%; background: rgba(48,186,120,0.6);">230</div>
+        </div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label" style="width: 100px;">HA</div>
+        <div class="bar-track">
+          <div class="bar-fill" style="width: 0.3%; background: rgba(48,186,120,0.6);">46</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ─── MLS PILOT TAB ─── -->
+<div class="tab-panel" id="mls-pilot">
+
+  <div class="callout">
+    <strong>SUSE MLS Pilot (Active)</strong> — Quote Q-222008 (11/3/2025), Walmart PO 6308245561 ($1,009,500), ordered by Josh Russell 11/2/2025. Term: 11/1/2025 – 2/28/2029 (3 years + 4-month extension). Unified SUSE + RHEL support model with significant bundled value.
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">MLS Pilot Execution Details</div>
+    </div>
+    <div class="info-row">
+      <div class="info-label">SUSE Quote</div>
+      <div class="info-value">Q-222008 (11/3/2025)</div>
+    </div>
+    <div class="info-row">
+      <div class="info-label">SUSE Contract #</div>
+      <div class="info-value">00029205</div>
+    </div>
+    <div class="info-row">
+      <div class="info-label">Walmart PO</div>
+      <div class="info-value">6308245561</div>
+    </div>
+    <div class="info-row">
+      <div class="info-label">Walmart PO Amount</div>
+      <div class="info-value" style="color: var(--success); font-weight: 700;">$1,009,500</div>
+    </div>
+    <div class="info-row">
+      <div class="info-label">Ordered By</div>
+      <div class="info-value">Josh Russell (joshua.russell@walmart.com), Store 07595</div>
+    </div>
+    <div class="info-row">
+      <div class="info-label">Term</div>
+      <div class="info-value">11/1/2025 – 2/28/2029 (3 years + 4 months)</div>
+    </div>
+    <div class="info-row">
+      <div class="info-label">EVT Quote</div>
+      <div class="info-value">EVTQ20250918182038 ($1,009,500)</div>
+    </div>
+    <div class="info-row">
+      <div class="info-label">EVT PO to SUSE</div>
+      <div class="info-value">EVTPO20251014184346 ($836,343.33)</div>
+    </div>
+    <div class="info-row">
+      <div class="info-label">Governing Bid Document</div>
+      <div class="info-value">MLS Special Bid (effective 10/17/2024)</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">What Walmart Gets: 1,000 SUSE MLS 1-VM 3-Year Support Licenses</div>
+    </div>
+    <div class="info-row">
+      <div class="info-label">License Type</div>
+      <div class="info-value">SUSE MLS 1-VM 3-Year Support</div>
+    </div>
+    <div class="info-row">
+      <div class="info-label">Quantity</div>
+      <div class="info-value">1,000 licenses</div>
+    </div>
+    <div class="info-row">
+      <div class="info-label">List Price</div>
+      <div class="info-value">$1,799 per license</div>
+    </div>
+    <div class="info-row">
+      <div class="info-label">Discounted Price</div>
+      <div class="info-value">$1,009.50 per license</div>
+    </div>
+    <div class="info-row">
+      <div class="info-label">Discount Rate</div>
+      <div class="info-value" style="color: var(--suse-green); font-weight: 700;">43.9% off list</div>
+    </div>
+    <div class="info-row">
+      <div class="info-label">Coverage</div>
+      <div class="info-value">SUSE and RHEL systems under unified support model</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">Bundled Value at No Additional Cost</div>
+      <div class="card-badge badge-active">~$998K Included</div>
+    </div>
+    <div class="section-subtitle">Strategic incentive for adopting unified Linux support model</div>
+
+    <div style="margin-bottom: 20px;">
+      <h4 style="color: var(--text-primary); margin-bottom: 12px; font-size: 0.95rem;">SUSE Premium Gold Support (24×7, Dedicated TAM)</h4>
+      <div class="info-row">
+        <div class="info-label">Annual Value</div>
+        <div class="info-value">$133,000</div>
+      </div>
+      <div class="info-row">
+        <div class="info-label">3-Year Base Term</div>
+        <div class="info-value">$399,000</div>
+      </div>
+      <div class="info-row">
+        <div class="info-label">4-Month Extension</div>
+        <div class="info-value">$44,333</div>
+      </div>
+      <div class="info-row">
+        <div class="info-label">Total Premium Gold Value</div>
+        <div class="info-value" style="color: var(--success); font-weight: 700;">$443,333</div>
+      </div>
+    </div>
+
+    <div style="margin-bottom: 20px;">
+      <h4 style="color: var(--text-primary); margin-bottom: 12px; font-size: 0.95rem;">RHEL 7 Extended Lifecycle Support (LTSS)</h4>
+      <div class="info-row">
+        <div class="info-label">Annual Value</div>
+        <div class="info-value">$150,000</div>
+      </div>
+      <div class="info-row">
+        <div class="info-label">3-Year Base Term</div>
+        <div class="info-value">$450,000</div>
+      </div>
+      <div class="info-row">
+        <div class="info-label">4-Month Extension</div>
+        <div class="info-value">$50,000</div>
+      </div>
+      <div class="info-row">
+        <div class="info-label">Total RHEL LTSS Value</div>
+        <div class="info-value" style="color: var(--success); font-weight: 700;">$500,000</div>
+      </div>
+    </div>
+
+    <div style="margin-bottom: 20px;">
+      <h4 style="color: var(--text-primary); margin-bottom: 12px; font-size: 0.95rem;">SUSE Assist Consulting</h4>
+      <div class="info-row">
+        <div class="info-label">Rate</div>
+        <div class="info-value">$13,750 per week</div>
+      </div>
+      <div class="info-row">
+        <div class="info-label">Duration</div>
+        <div class="info-value">4 weeks</div>
+      </div>
+      <div class="info-row">
+        <div class="info-label">Total SUSE Assist Value</div>
+        <div class="info-value" style="color: var(--success); font-weight: 700;">$55,000</div>
+      </div>
+    </div>
+
+    <div>
+      <h4 style="color: var(--text-primary); margin-bottom: 12px; font-size: 0.95rem;">Program Totals</h4>
+      <div class="info-row">
+        <div class="info-label">Total Bundled Value</div>
+        <div class="info-value" style="color: var(--suse-green); font-weight: 700;">~$998,333</div>
+      </div>
+      <div class="info-row">
+        <div class="info-label">Walmart Paid (Licenses Only)</div>
+        <div class="info-value">$1,009,500</div>
+      </div>
+      <div class="info-row">
+        <div class="info-label">List Value Savings</div>
+        <div class="info-value" style="color: var(--success); font-weight: 700;">~$1.93M (65.7% savings)</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">EVT Cost Breakdown to SUSE</div>
+    </div>
+    <div class="section-subtitle">Quote Q-222008 detail: $836,343.33 to SUSE on EVT PO EVTPO20251014184346</div>
+    <div class="info-row">
+      <div class="info-label">SUSE Premium Gold (3.33yr)</div>
+      <div class="info-value">$443,333</div>
+    </div>
+    <div class="info-row">
+      <div class="info-label">SUSE Assist (4 weeks)</div>
+      <div class="info-value">$55,000</div>
+    </div>
+    <div class="info-row">
+      <div class="info-label">MLS Professional (500-999 tier)</div>
+      <div class="info-value">500 × $676.02 = $338,010</div>
+    </div>
+    <div class="info-row">
+      <div class="info-label">Total EVT → SUSE Cost</div>
+      <div class="info-value" style="color: var(--text-primary); font-weight: 700;">$836,343.33</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">Program Strategic Value</div>
+    </div>
+    <div class="section-subtitle">Why this pilot matters for Walmart</div>
+    <div class="info-row">
+      <div class="info-label">Support Model</div>
+      <div class="info-value">Unified vendor management for SUSE and RHEL</div>
+    </div>
+    <div class="info-row">
+      <div class="info-label">Risk Reduction</div>
+      <div class="info-value">Extended lifecycle + proactive TAM coverage</div>
+    </div>
+    <div class="info-row">
+      <div class="info-label">Scalability</div>
+      <div class="info-value">Establishes foundation for enterprise rollout</div>
+    </div>
+    <div class="info-row">
+      <div class="info-label">Internal Codename</div>
+      <div class="info-value">"Liberty Lineage" — RHEL → MLS conversion pathway</div>
+    </div>
+    <div class="info-row">
+      <div class="info-label">Contacts</div>
+      <div class="info-value">Daniel Thaure (SUSE) + Blaine Glaser (SUSE Enterprise AE)</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ─── TIMELINE TAB ─── -->
+<div class="tab-panel" id="timeline">
+
+  <h2 class="section-title">Key Dates & Upcoming Milestones</h2>
+  <p class="section-subtitle">Important decision points, renewals, and contract expirations through 2029</p>
+
+  <div class="card">
+    <div class="timeline">
+
+      <div class="timeline-item">
+        <div class="timeline-dot dot-active"></div>
+        <div class="timeline-date">Current</div>
+        <div class="timeline-title">SLES ELA & MLS Active</div>
+        <div class="timeline-desc">Both contracts in execution. SLES renewal through 1/31/2028. MLS pilot through 2/28/2029.</div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-dot dot-future"></div>
+        <div class="timeline-date">6/30/2026</div>
+        <div class="timeline-title">LTSS PO 6302828717 Expires</div>
+        <div class="timeline-desc">Partial LTSS contract (SLES 12SP4, 15SP3, 15SP1) expires. Renewal status TBD.</div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-dot dot-pending"></div>
+        <div class="timeline-date">7/31/2026</div>
+        <div class="timeline-title">Edge Swap Decision #1 Deadline</div>
+        <div class="timeline-desc">Walmart must decide: Keep 150 Cloud Native Edge bundles or convert up to 13,075 SLES subscriptions at $218/unit. If converting, execution by 8/1/2026.</div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-dot dot-future"></div>
+        <div class="timeline-date">8/1/2026</div>
+        <div class="timeline-title">Year 2 H2 Begins – Cloud Native Edge</div>
+        <div class="timeline-desc">If no swap: 150 Cloud Native Edge bundles (B-CNE-20C-PS1) covering ~3,000 sites begins. Period: 8/1/2026 – 1/31/2027.</div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-dot dot-future"></div>
+        <div class="timeline-date">8/31/2027</div>
+        <div class="timeline-title">SAP Contract Expires</div>
+        <div class="timeline-desc">Separate SAP deal (230 SLES subs) expires. Note: Expansion vector for future negotiation.</div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-dot dot-pending"></div>
+        <div class="timeline-date">1/31/2027</div>
+        <div class="timeline-title">Edge Swap Decision #2 Deadline</div>
+        <div class="timeline-desc">Walmart must decide: Keep 235 Cloud Native Edge bundles or convert up to 10,402 SLES subscriptions at $218/unit. Swap execution by 2/1/2027.</div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-dot dot-future"></div>
+        <div class="timeline-date">2/1/2027</div>
+        <div class="timeline-title">Year 3 Full Edge Begins</div>
+        <div class="timeline-desc">If no swap: 235 Cloud Native Edge bundles (B-CNE-20C-PS1) covering ~4,700 sites. Period: 2/1/2027 – 1/31/2028.</div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-dot dot-future"></div>
+        <div class="timeline-date">1/31/2028</div>
+        <div class="timeline-title">SLES ELA 3-Year Renewal Expires</div>
+        <div class="timeline-desc">Primary contract term ends. Renewal negotiation should begin by Q4 2027.</div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-dot dot-future"></div>
+        <div class="timeline-date">10/31/2028</div>
+        <div class="timeline-title">MLS Pilot Base Term Ends</div>
+        <div class="timeline-desc">Initial 3-year term (11/1/2025 – 10/31/2028) concludes. 4-month extension (11/1/2028 – 2/28/2029) auto-continues.</div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-dot dot-future"></div>
+        <div class="timeline-date">2/28/2029</div>
+        <div class="timeline-title">MLS Pilot Full Term Expires</div>
+        <div class="timeline-desc">MLS pilot with full 4-month extension ends. Decision: Renewal, expansion, or discontinuation required.</div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+</div>
+
+<!-- ═══════ FOOTER ═══════ -->
+<div class="footer">
+  <div>Enterprise Vision Technologies &nbsp;|&nbsp; Supplier #126055 &nbsp;|&nbsp; EVT Confidential — Limited Use</div>
+  <div>Updated April 2026</div>
+</div>
+
+<script>
+document.querySelectorAll('.tab').forEach(tab => {
+  tab.addEventListener('click', function() {
+    const tabName = this.getAttribute('data-tab');
+
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+
+    this.classList.add('active');
+    document.getElementById(tabName).classList.add('active');
+  });
+});
+</script>
+
+</body>
+</html>
