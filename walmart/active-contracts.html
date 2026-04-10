@@ -343,7 +343,7 @@ td.highlight { color: var(--text-primary); font-weight: 600; }
 <!-- ═══════ TABS ═══════ -->
 <div class="tabs">
   <div class="tab active" data-tab="overview">Overview</div>
-  <div class="tab" data-tab="sles-ela">SLES ELA</div>
+  <div class="tab" data-tab="sles-ela">SLES & LTSS</div>
   <div class="tab" data-tab="sap">SLES for SAP</div>
   <div class="tab" data-tab="mls-pilot">MLS Pilot</div>
   <div class="tab" data-tab="timeline">Key Dates</div>
@@ -793,7 +793,7 @@ td.highlight { color: var(--text-primary); font-weight: 600; }
 <div class="tab-panel" id="sap">
 
   <div class="callout">
-    <strong>SLES for SAP 3-Year Renewal</strong> — EVT Quote EVT051024-SAPSUSE (5/10/2024), SUSE MLA Contract #M40696757. Quote Total: $3,026,839.56 (after $399K Gold Premium Support bundled discount). Term: 9/1/2024 – 8/31/2027. Staggered subscription ramp to 856 SAP subs at peak.
+    <strong>SLES for SAP 3-Year Renewal</strong> — EVT Quote EVT051024-SAPSUSE (5/10/2024), SUSE MLA Contract #M40696757. Quote Total: $3,026,839.56 (after $399K Gold Premium Support bundled discount). Term: 9/1/2024 – 8/31/2027. Co-termed subscriptions scaling to 856 SAP subs at peak, all co-terminating 8/31/2027.
   </div>
 
   <div class="card">
@@ -840,10 +840,10 @@ td.highlight { color: var(--text-primary); font-weight: 600; }
 
   <div class="card">
     <div class="card-header">
-      <div class="card-title">SAP Subscription Schedule (Staggered Ramp)</div>
+      <div class="card-title">SAP Subscription Schedule (Co-Term)</div>
       <div class="card-badge badge-active">856 Peak Subs</div>
     </div>
-    <div class="section-subtitle">Subscriptions onboard in waves — all co-terminate 8/31/2027</div>
+    <div class="section-subtitle">Subscriptions co-terminate 8/31/2027 — staggered start dates, single end date</div>
     <table>
       <thead>
         <tr>
@@ -908,9 +908,9 @@ td.highlight { color: var(--text-primary); font-weight: 600; }
 
   <div class="card">
     <div class="card-header">
-      <div class="card-title">SAP Subscription Ramp Timeline</div>
+      <div class="card-title">SAP Subscription Co-Term Timeline</div>
     </div>
-    <div class="section-subtitle">Active SAP subscription count by period — all terminate 8/31/2027</div>
+    <div class="section-subtitle">Active SAP subscription count by period — all co-terminate 8/31/2027</div>
     <div class="bar-chart">
       <div class="bar-row">
         <div class="bar-label" style="width: 140px;">9/2024 – 8/2025</div>
@@ -948,12 +948,12 @@ td.highlight { color: var(--text-primary); font-weight: 600; }
       <div class="info-value" style="font-weight: 700;">683 (571 base + 112 wave 2)</div>
     </div>
     <div class="info-row">
-      <div class="info-label">Next Ramp</div>
-      <div class="info-value">+81 subs on 5/1/2026 (next month)</div>
+      <div class="info-label">Next Co-Term Tranche</div>
+      <div class="info-value">+81 subs on 5/1/2026 (next month), co-terminating 8/31/2027</div>
     </div>
     <div class="info-row">
-      <div class="info-label">Final Ramp</div>
-      <div class="info-value">+92 subs on 8/1/2026</div>
+      <div class="info-label">Final Co-Term Tranche</div>
+      <div class="info-value">+92 subs on 8/1/2026, co-terminating 8/31/2027</div>
     </div>
     <div class="info-row">
       <div class="info-label">Contract Expiry</div>
@@ -961,7 +961,7 @@ td.highlight { color: var(--text-primary); font-weight: 600; }
     </div>
     <div class="info-row">
       <div class="info-label">Expansion Signal</div>
-      <div class="info-value">Growing SAP footprint (571 → 856 over 2 years) indicates expanding SAP workload at Walmart</div>
+      <div class="info-value">Growing SAP footprint (571 → 856 via co-term tranches) indicates expanding SAP workload at Walmart</div>
     </div>
     <div class="info-row">
       <div class="info-label">Bundled Value</div>
@@ -1198,14 +1198,7 @@ td.highlight { color: var(--text-primary); font-weight: 600; }
         <div class="timeline-desc">Both contracts in execution. SLES renewal through 1/31/2028. MLS pilot through 2/28/2029.</div>
       </div>
 
-      <div class="timeline-item">
-        <div class="timeline-dot dot-future"></div>
-        <div class="timeline-date">6/30/2026</div>
-        <div class="timeline-title">LTSS PO 6302828717 Expires</div>
-        <div class="timeline-desc">Partial LTSS contract (SLES 12SP4, 15SP3, 15SP1) expires. Renewal status TBD.</div>
-      </div>
-
-      <div class="timeline-item">
+<div class="timeline-item">
         <div class="timeline-dot dot-pending"></div>
         <div class="timeline-date">7/31/2026</div>
         <div class="timeline-title">Edge Swap Decision #1 Deadline</div>
