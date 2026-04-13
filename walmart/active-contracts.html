@@ -251,10 +251,18 @@ td.highlight { color: var(--text-primary); font-weight: 600; }
   padding: 10px 0;
   border-bottom: 1px solid rgba(255,255,255,0.04);
   font-size: 0.875rem;
+  gap: 24px;
 }
 .info-row:last-child { border-bottom: none; }
-.info-label { color: var(--text-muted); }
-.info-value { color: var(--text-primary); font-weight: 500; }
+.info-label { color: var(--text-muted); flex-shrink: 0; min-width: 180px; }
+.info-value { color: var(--text-primary); font-weight: 500; text-align: right; }
+
+/* ── Optimization tab ── */
+#optimization .card { margin-bottom: 28px; padding: 28px 32px; }
+#optimization .card-header { margin-bottom: 20px; }
+#optimization .section-subtitle { margin-bottom: 24px; }
+#optimization .info-row { padding: 14px 0; }
+#optimization .callout { padding: 20px 24px; margin-bottom: 28px; line-height: 1.7; }
 
 /* ── Bar chart visual ── */
 .bar-chart { margin-top: 16px; }
@@ -346,6 +354,7 @@ td.highlight { color: var(--text-primary); font-weight: 600; }
   <div class="tab" data-tab="sles-ela">SLES & LTSS</div>
   <div class="tab" data-tab="sap">SLES for SAP</div>
   <div class="tab" data-tab="mls-pilot">MLS Pilot</div>
+  <div class="tab" data-tab="optimization">Contract Optimization</div>
   <div class="tab" data-tab="timeline">Key Dates</div>
 </div>
 
@@ -1178,6 +1187,149 @@ td.highlight { color: var(--text-primary); font-weight: 600; }
       <div class="info-label">Contacts</div>
       <div class="info-value">Daniel Thaure (SUSE) + Blaine Glaser (SUSE Enterprise AE)</div>
     </div>
+  </div>
+
+</div>
+
+<!-- ─── CONTRACT OPTIMIZATION TAB ─── -->
+<div class="tab-panel" id="optimization">
+
+  <div class="callout">
+    <strong>Optimization Opportunities</strong> — With the Edge swap deadline approaching on 7/31/2026, the SAP renewal on the horizon, and Azure workloads expanding, now is an ideal time to restructure the SUSE agreements. A proactive rework can extend the runway for SLES in stores, consolidate Azure licensing at better rates, and simplify the path to renewal.
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">1. Extend the Runway for SLES in Stores</div>
+      <div class="card-badge badge-pending">Time-Sensitive</div>
+    </div>
+    <div class="section-subtitle">The current SLES ELA includes swap deadlines tied to the Cloud Native Edge transition — restructuring now provides flexibility</div>
+    <div class="info-row">
+      <div class="info-label">Current Agreement</div>
+      <div class="info-value">The SLES ELA includes a draw down schedule with swap rights tied to the Cloud Native Edge transition</div>
+    </div>
+    <div class="info-row">
+      <div class="info-label">Upcoming Milestone</div>
+      <div class="info-value" style="color: var(--warning);">Swap Decision #1 deadline is 7/31/2026 — SUSE will reconcile SLES entitlements against the draw down schedule at that point</div>
+    </div>
+    <div class="info-row">
+      <div class="info-label">Consideration</div>
+      <div class="info-value">If the Edge transition timeline has shifted, the current draw down schedule may not reflect operational reality in stores</div>
+    </div>
+    <div class="info-row">
+      <div class="info-label">Opportunity</div>
+      <div class="info-value" style="color: var(--success);">Reworking the agreement before 7/31 extends the SLES runway in stores, aligns entitlements with actual needs, and avoids an entitlement adjustment on SUSE's timeline</div>
+    </div>
+    <div class="info-row">
+      <div class="info-label">EVT Recommendation</div>
+      <div class="info-value">Engage before the swap deadline to restructure the draw down schedule on Walmart's terms and preserve flexibility for the store environment</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">2. Azure PayGo → MLA Conversion</div>
+      <div class="card-badge badge-proposed">Cost Savings</div>
+    </div>
+    <div class="section-subtitle">Converting Azure PayGo licenses to MLA pricing under the existing SUSE agreement can reduce costs</div>
+    <div class="info-row">
+      <div class="info-label">Current State</div>
+      <div class="info-value">SLES for SAP in Azure is licensed via PayGo (pay-as-you-go) at on-demand rates</div>
+    </div>
+    <div class="info-row">
+      <div class="info-label">Proposed State</div>
+      <div class="info-value">Convert to MLA pricing under existing SUSE contract #M40696757</div>
+    </div>
+    <div class="info-row">
+      <div class="info-label">Benefit</div>
+      <div class="info-value" style="color: var(--success);">MLA volume pricing is significantly lower than PayGo rates — immediate cost reduction</div>
+    </div>
+    <div class="info-row">
+      <div class="info-label">Additional Benefit</div>
+      <div class="info-value">Centralizes license management under one agreement instead of split Azure billing + MLA</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">3. Multi-Region Azure Expansion</div>
+      <div class="card-badge badge-proposed">Growth</div>
+    </div>
+    <div class="section-subtitle">Expanding into multiple Azure regions for redundancy creates an opportunity to bundle new licenses at favorable rates</div>
+    <div class="info-row">
+      <div class="info-label">Driver</div>
+      <div class="info-value">Multi-region redundancy in Azure requires additional SLES for SAP entitlements</div>
+    </div>
+    <div class="info-row">
+      <div class="info-label">Opportunity</div>
+      <div class="info-value">Include new region licenses in the restructured contract at MLA rates from day one</div>
+    </div>
+    <div class="info-row">
+      <div class="info-label">Timing</div>
+      <div class="info-value" style="color: var(--success);">Align with the SAP renewal (expires 8/31/2027) for a single consolidated agreement</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">4. SAP Renewal — Consolidation Window</div>
+      <div class="card-badge badge-proposed">Strategic</div>
+    </div>
+    <div class="section-subtitle">The SLES for SAP contract expires 8/31/2027 — restructuring now sets up a clean renewal</div>
+    <div class="info-row">
+      <div class="info-label">Current SAP Contract</div>
+      <div class="info-value">$3.03M, expires 8/31/2027 — 856 subs at peak</div>
+    </div>
+    <div class="info-row">
+      <div class="info-label">Rework Benefit</div>
+      <div class="info-value">Consolidate Azure PayGo, multi-region expansion, and SLES draw down into one streamlined agreement ahead of renewal</div>
+    </div>
+    <div class="info-row">
+      <div class="info-label">Walmart's Position</div>
+      <div class="info-value" style="color: var(--success);">A growing SAP footprint and expanding Azure presence represent a strong volume commitment — ideal positioning for favorable terms</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">Summary: Benefits of Acting Now</div>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>Consideration</th>
+          <th>Wait</th>
+          <th>Restructure Now</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="highlight">SLES in Stores</td>
+          <td style="color: var(--warning);">7/31 swap deadline adjusts entitlements per current schedule</td>
+          <td style="color: var(--success);">Extend the runway — align entitlements with actual store needs</td>
+        </tr>
+        <tr>
+          <td class="highlight">Azure PayGo Licenses</td>
+          <td style="color: var(--warning);">Continue at on-demand rates</td>
+          <td style="color: var(--success);">Convert to MLA — immediate savings</td>
+        </tr>
+        <tr>
+          <td class="highlight">Multi-Region Expansion</td>
+          <td style="color: var(--warning);">Separate procurement at PayGo rates</td>
+          <td style="color: var(--success);">Bundled into restructure at volume pricing</td>
+        </tr>
+        <tr>
+          <td class="highlight">SAP Renewal (8/31/2027)</td>
+          <td style="color: var(--warning);">Negotiate from scratch next year</td>
+          <td style="color: var(--success);">Set the foundation now, clean renewal later</td>
+        </tr>
+        <tr>
+          <td class="highlight">$399K Gold Premium Support</td>
+          <td style="color: var(--warning);">May not carry into a new deal</td>
+          <td style="color: var(--success);">Preserve bundled value in restructure</td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 
 </div>
